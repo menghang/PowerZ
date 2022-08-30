@@ -1,0 +1,188 @@
+﻿<Window
+    x:Class="PowerZApp.MainWindow"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:oxy="http://oxyplot.org/wpf"
+    xmlns:local="clr-namespace:PowerZApp"
+    mc:Ignorable="d"
+    Title="PowerZ App"
+    Height="450"
+    Width="800"
+    Loaded="Window_Loaded">
+    <DockPanel>
+        <Menu
+            DockPanel.Dock="Top">
+            <MenuItem
+                Header="File"
+                Height="24" />
+            <MenuItem
+                Header="About"
+                Height="24" />
+        </Menu>
+        <TabControl
+            Width="200"
+            DockPanel.Dock="Right"
+            Margin="5">
+            <TabItem
+                Header="Settings">
+                <StackPanel>
+                    <DockPanel
+                        Margin="5">
+                        <Label
+                            Content="SN:"
+                            VerticalContentAlignment="Center"
+                            Height="30" />
+                        <ComboBox                            
+                            ItemsSource="{Binding Devices,Mode=OneWay}"
+                            SelectedItem="{Binding SelectedDevice}"
+                            IsReadOnly="True"
+                            VerticalContentAlignment="Center"
+                            Height="30" />
+                    </DockPanel>
+                    <DockPanel
+                        Margin="5">
+                        <Label
+                            Content="Sample Rate:"
+                            VerticalContentAlignment="Center"
+                            Height="30" />
+                        <ComboBox
+                            ItemsSource="{Binding SampleRates}"
+                            SelectedItem="{Binding SelectedSampleRate}"
+                            VerticalContentAlignment="Center"
+                            Height="30"
+                            SelectionChanged="ComboBoxSampleRates_SelectionChanged" />
+                    </DockPanel>
+                    <CheckBox
+                        Content="Auto Refresh Chart"
+                        VerticalContentAlignment="Center"
+                        IsChecked="{Binding EnableAutoRefresh}"
+                        Height="30"
+                        Margin="5" />
+                    <DockPanel
+                        Height="30"
+                        Margin="5">
+                        <Label
+                            Content="Model:"
+                            VerticalContentAlignment="Center" />
+                        <TextBox
+                            Text="{Binding Model}"
+                            VerticalContentAlignment="Center" />
+                    </DockPanel>
+                    <DockPanel
+                        Height="30"
+                        Margin="5">
+                        <Label
+                            Content="Path:"
+                            VerticalContentAlignment="Center" />
+                        <TextBox
+                            Text="{Binding SavePath}"
+                            VerticalContentAlignment="Center" />
+                    </DockPanel>
+                    <Button
+                        Content="Start"
+                        IsEnabled="{Binding EnableStart}"
+                        Height="30"
+                        Margin="5"
+                        Click="ButtonStart_Click" />
+                    <Button
+                        Content="Stop"
+                        IsEnabled="{Binding EnableStop}"
+                        Height="30"
+                        Margin="5"
+                        Click="ButtonStop_Click" />
+                </StackPanel>
+            </TabItem>
+            <TabItem
+                Header="Log">
+                <TextBox
+                    Text=""
+                    Margin="5" />
+            </TabItem>
+        </TabControl>
+        <UniformGrid
+            Rows="1"
+            Columns="3"
+            DockPanel.Dock="Bottom">
+            <TextBox
+                Text="{Binding DispVoltage,Mode=OneWay}"
+                IsReadOnly="True"
+                HorizontalContentAlignment="Center"
+                VerticalContentAlignment="Center"
+                UndoLimit="0"
+                FontWeight="Bold"
+                FontSize="32"
+                Foreground="DodgerBlue"
+                Height="60"
+                Margin="5" />
+            <TextBox
+                Text="{Binding DispCurrent,Mode=OneWay}"
+                IsReadOnly="True"
+                HorizontalContentAlignment="Center"
+                VerticalContentAlignment="Center"
+                UndoLimit="0"
+                FontWeight="Bold"
+                FontSize="32"
+                Foreground="Tomato"
+                Height="60"
+                Margin="5" />
+            <TextBox
+                Text="{Binding DispPower,Mode=OneWay}"
+                IsReadOnly="True"
+                HorizontalContentAlignment="Center"
+                VerticalContentAlignment="Center"
+                UndoLimit="0"
+                FontWeight="Bold"
+                FontSize="32"
+                Foreground="Orange"
+                Height="60"
+                Margin="5" />
+        </UniformGrid>
+        <oxy:Plot
+            x:Name="plot"
+            Title="{Binding Model}"
+            Margin="5">
+            <oxy:Plot.Axes>
+                <oxy:DateTimeAxis
+                    Key="Time"
+                    Position="Bottom"
+                    StringFormat="HH:mm:ss"
+                    MajorGridlineStyle="Dash"/>
+                <oxy:LinearAxis
+                    Key="Voltage"
+                    Title="Voltage/V"
+                    TitleColor="DodgerBlue"
+                    TextColor="DodgerBlue"
+                    Position="Left"
+                    MajorGridlineStyle="Dash"
+                    Minimum="0"
+                    Maximum="24"/>
+                <oxy:LinearAxis
+                    Key="Current"
+                    Title="Current/A"
+                    TitleColor="Tomato"
+                    TextColor="Tomato"
+                    Position="Right"
+                    Minimum="0"
+                    Maximum="5"/>
+            </oxy:Plot.Axes>
+            <oxy:Plot.Series>
+                <oxy:LineSeries
+                    ItemsSource="{Binding VSeries}"
+                    Color="DodgerBlue"
+                    StrokeThickness="1"
+                    Title="Voltage"
+                    XAxisKey="Time"
+                    YAxisKey="Voltage" />
+                <oxy:LineSeries
+                    ItemsSource="{Binding CSeries}"
+                    Color="Tomato"
+                    StrokeThickness="1"
+                    Title="Current"
+                    XAxisKey="Time"
+                    YAxisKey="Current" />
+            </oxy:Plot.Series>
+        </oxy:Plot>
+    </DockPanel>
+</Window>
